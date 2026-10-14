@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Paleta del diseño original (slate + azul). Los tokens los usan las vistas
+   "Mi espacio" y "Portal del alumno" para verse igual que el resto. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-oro: #2563eb;
+  --color-oro-hover: #1d4ed8;
+  --color-oro-suave: #eff6ff;
+  --color-negro: #0f172a;
+  --color-carbon: #1e293b;
+  --color-grafito: #334155;
+  --color-fondo: #f3f4f6;
+  --color-borde: #e5e7eb;
+  --color-texto: #0f172a;
+  --color-tenue: #64748b;
+
+  --color-pastel-verde: #d1fae5;
+  --color-pastel-rojo: #ffe4e6;
+  --color-pastel-azul: #dbeafe;
+  --color-pastel-lila: #ede9fe;
+  --color-pastel-naranja: #fef3c7;
+  --color-pastel-gris: #f1f5f9;
+
+  --color-verde: #059669;
+  --color-rojo: #e11d48;
+  --color-azul: #2563eb;
+  --color-lila: #7c3aed;
+  --color-naranja: #d97706;
+}
+
+.campo {
+  width: 100%;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--color-texto);
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+.campo::placeholder { color: #9ca3af; }
+.campo:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 1px #2563eb; }
+.campo:disabled { background: #f1f5f9; color: var(--color-tenue); }
+select.campo { appearance: none; padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; }
+
+.tarjeta { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
+
+.desplazable::-webkit-scrollbar { width: 6px; height: 6px; }
+.desplazable::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
+
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+.aparecer { animation: aparecer .18s ease-out; }

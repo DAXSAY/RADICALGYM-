@@ -1,0 +1,205 @@
+﻿
+RADICAL GYM - Prueba de endpoints (http://localhost:8000)
+
+[Autenticación]
+  [OK]   Salud: MySQL y Redis                                       200 
+  [OK]   Clave incorrecta rechazada                                 401 
+  [OK]   Sin token => 401                                           401 
+  [OK]   Ingreso como admin                                         200 
+  [OK]   Ingreso como recepcion                                     200 
+  [OK]   Ingreso como entrenador                                    200 
+  [OK]   Ingreso como nutricionista                                 200 
+  [OK]   Ingreso como fisioterapeuta                                200 
+  [OK]   Ingreso como 70000001                                      200 
+  [OK]   Perfil del usuario (yo)                                    200 
+  [OK]   Ingreso como sofia                                         200 
+  [OK]   Cerrar sesión                                             200 
+  [OK]   Token cerrado ya no sirve                                  401 
+
+[Panel]
+  [OK]   Indicadores del panel                                      200 
+  [OK]   Alumno no accede al panel => 403                           403 
+
+[Alumnos]
+  [OK]   Listado paginado (página 1, 5 por página)                200 
+  [OK]   Caché Redis: segunda consulta = HIT                       200 
+  [OK]   Filtro por sexo F                                          200 
+  [OK]   Filtro por plan (Mensual)                                  200 
+  [OK]   Filtro por programa afiliado                               200 
+  [OK]   Filtro por mes de inscripción                             200 
+  [OK]   Filtro estado sin plan                                     200 
+  [OK]   Registrar alumno con matrícula                            201 
+  [OK]   DNI duplicado rechazado (procedimiento)                    422 
+  [OK]   Actualizar alumno                                          200 
+  [OK]   Subir foto (id_alumnos_foto.png)                           200 
+  [OK]   Detalle con historial de matrículas                       200 
+  [OK]   Renovar matrícula                                         201 
+  [OK]   Alumno solo ve su ficha (forzado a su id)                  200 
+  [OK]   Alumno no lista alumnos => 403                             403 
+
+[Planes y programas]
+  [OK]   Listar planes y tarifas                                    200 
+  [OK]   Crear plan                                                 201 
+  [OK]   Editar plan                                                200 
+  [OK]   Desactivar plan                                            200 
+  [OK]   Recepción no crea planes => 403                           403 
+  [OK]   Listar programas de entrenamiento                          200 
+
+[Personal]
+  [OK]   Listar empleados (paginado)                                200 
+  [OK]   Filtro por cargo entrenador                                200 
+  [OK]   Registrar empleado (+ usuario)                             201 
+  [OK]   Guardar horario semanal                                    200 
+  [OK]   Crear contrato (fin calculado por trigger)                 201 
+  [OK]   Subir contrato PDF (id_contratos_documento.pdf)            200 
+  [OK]   Listar contratos                                           200 
+  [OK]   Entrenador ve solo sus contratos                           200 
+  [OK]   Resumen mensual del entrenador (horas, faltas)             200 
+  [OK]   Solicitar permiso (entrenador)                             201 
+  [OK]   Subir sustento del permiso                                 200 
+  [OK]   Aprobar permiso (trigger marca días)                      200 
+  [OK]   Entrenador no aprueba permisos => 403                      403 
+  [OK]   Listar permisos pendientes                                 200 
+
+[Asistencia]
+  [OK]   Registrar asistencia de alumno por DNI                     201 
+  [OK]   Alumno sin plan no ingresa (procedimiento)                 422 
+  [OK]   Asistencias de alumnos de hoy                              200 
+  [OK]   Marcar entrada del personal                                200 
+  [OK]   Registrar falta                                            200 
+  [OK]   Estado del personal del día                               200 
+
+[Citas nutrición / fisioterapia]
+  [OK]   Horarios de nutricionistas                                 200 
+  [OK]   Agenda del día de la nutricionista                        200 
+  [OK]   Agenda del día del fisioterapeuta                         200 
+  [OK]   Programar cita                                             201 
+  [OK]   Cruce de horario rechazado (trigger)                       422 
+  [OK]   Marcar cita como atendida                                  200 
+  [OK]   Citas del alumno (portal)                                  200 
+
+[Nutrición y medidas]
+  [OK]   Buscar alimentos del catálogo                             200 
+  [OK]   Crear dieta con 5 comidas (incluye horas extra)            201 
+  [OK]   Listar dietas (paginado)                                   200 
+  [OK]   Detalle de dieta                                           200 
+  [OK]   Alumno ve su dieta activa                                  200 
+  [OK]   Alumno no ve dieta ajena => 404                            404 
+  [OK]   Registrar medidas con pares der/izq (IMC por trigger)      201 
+  [OK]   Talla fuera de rango rechazada                             422 
+  [OK]   Historial de medidas del alumno                            200 
+  [OK]   Alumno ve sus reportes de medidas                          200 
+
+[Fisioterapia]
+  [OK]   Buscar técnicas                                           200 
+  [OK]   Agregar técnica                                           201 
+  [OK]   Editar técnica                                            200 
+  [OK]   Sesión con varias zonas y dolor por zona                  201 
+  [OK]   Eliminar técnica usada => se archiva                      200 
+  [OK]   Zona inválida rechazada                                   422 
+  [OK]   Historial de sesiones (paginado)                           200 
+  [OK]   Detalle de sesión                                         200 
+  [OK]   Nutricionista no registra fisioterapia => 403              403 
+
+[Productos y ventas]
+  [OK]   Listar productos (paginado)                                200 
+  [OK]   Crear producto                                             201 
+  [OK]   Imagen en carpeta productos (id_productos_nombre)          200 
+  [OK]   Registrar venta (trigger descuenta stock)                  201 
+  [OK]   Stock actualizado a 7                                      200 
+  [OK]   Stock insuficiente rechazado (trigger)                     422 
+  [OK]   Listar ventas                                              200 
+  [OK]   Detalle de venta                                           200 
+
+[Caja]
+  [OK]   Movimientos del mes                                        200 
+  [OK]   Registrar egreso                                           201 
+  [OK]   Resumen de caja                                            200 
+  [OK]   Recepción no ve caja => 403                               403 
+
+[Notificaciones]
+  [OK]   Enviar notificación a un alumno                           201 
+  [OK]   Generar avisos de vencimiento                              200 
+  [OK]   Bandeja de recepción                                      200 
+  [OK]   Alumno recibe la suya                                      200 
+  [OK]   Marcar como leída                                         200 
+
+[Portal del alumno]
+  [OK]   Mi plan, asistencias y próximas citas                     200 
+  [OK]   Personal no usa el portal de alumno => 403                 403 
+
+[Carga inicial del frontend]
+  [OK]   Datos completos para administrador                         200 
+  [OK]   Datos en caché Redis (HIT)                                200 
+  [OK]   Alumno solo recibe sus datos                               200 
+
+[Entrenadores, ejercicios y rutinas]
+  [OK]   Registrar entrenador                                       201 
+  [OK]   Editar entrenador                                          200 
+  [OK]   Crear ejercicio                                            201 
+  [OK]   Crear rutina con días y ejercicios                        201 
+  [OK]   Editar rutina                                              200 
+  [OK]   Eliminar rutina                                            200 
+  [OK]   Eliminar ejercicio                                         200 
+  [OK]   Retirar entrenador                                         200 
+  [OK]   Asignar entrenador a alumno                                200 
+
+[Spinning]
+  [OK]   Crear sesión de spinning                                  201 
+  [OK]   Reservar bicicleta (alumno)                                201 
+  [OK]   Bicicleta ocupada rechazada (trigger)                      422 
+  [OK]   Visitante paga y reserva (ingreso por trigger)             201 
+  [OK]   Check-in de la reserva                                     200 
+  [OK]   Bicicleta en mantenimiento                                 200 
+  [OK]   No se reserva bici en mantenimiento                        422 
+  [OK]   Generar código de pase                                    201 
+  [OK]   Canjear código                                            201 
+  [OK]   Código ya canjeado rechazado                              422 
+  [OK]   Eliminar sesión                                           200 
+
+[Finanzas y planilla]
+  [OK]   Registrar egreso por avería                               201 
+  [OK]   Adjuntar comprobante (id_movimientos_caja_adjunto)         200 
+  [OK]   Eliminar movimiento manual                                 200 
+  [OK]   Pagar sueldo (egreso por trigger)                          200 
+
+[Contratos completos y asistencia]
+  [OK]   Alta de trabajador con contrato y usuario                  201 
+  [OK]   Actualizar contrato                                        200 
+  [OK]   Renovar contrato                                           201 
+  [OK]   Marca de asistencia del personal (genérica)               201 
+  [OK]   Segunda marca = salida                                     201 
+  [OK]   Ingreso de alumno (genérico)                              201 
+  [OK]   Eliminar marca                                             200 
+
+[Reglas, clases, campañas y cuentas]
+  [OK]   Desactivar regla de notificación                          200 
+  [OK]   Publicar clase                                             201 
+  [OK]   Eliminar clase                                             200 
+  [OK]   Campaña en lote                                           201 
+  [OK]   Editar dieta (reemplaza comidas)                           200 
+  [OK]   Crear cuenta de acceso (admin)                             201 
+  [OK]   Clave actual incorrecta rechazada                          422 
+
+======================================================================
+  Autenticación         13/13 OK
+  Panel                   2/ 2 OK
+  Alumnos                15/15 OK
+  Planes y programas      6/ 6 OK
+  Personal               14/14 OK
+  Asistencia              6/ 6 OK
+  Citas                   7/ 7 OK
+  Nutrición y medidas   10/10 OK
+  Fisioterapia            9/ 9 OK
+  Ventas                  8/ 8 OK
+  Caja                    4/ 4 OK
+  Notificaciones          5/ 5 OK
+  Portal                  2/ 2 OK
+  Carga inicial           3/ 3 OK
+  Entrenamiento           9/ 9 OK
+  Spinning               11/11 OK
+  Finanzas y planilla     4/ 4 OK
+  Personal ampliado       7/ 7 OK
+  Avisos y cuentas        7/ 7 OK
+
+Total: 142 pruebas, 142 correctas, 0 fallidas
