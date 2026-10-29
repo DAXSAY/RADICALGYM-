@@ -249,11 +249,11 @@ export interface GymClassNotice {
   date: string;
 }
 
-// --- NUTRITION MODULE TYPES ---
 export interface MealItem {
   id: string;
   name: string;
   portion: string;
+  weightGrams?: number;
   calories: number;
   proteins: number;
   carbs: number;
@@ -412,7 +412,7 @@ export interface SpinningReservation {
 }
 
 // --- USER ROLES & AUTHENTICATION TYPES ---
-export type UserRole = 'admin' | 'trainer' | 'student' | 'staff';
+export type UserRole = 'admin' | 'trainer' | 'reception' | 'staff' | 'student';
 
 export interface AppUser {
   id: string;
@@ -526,11 +526,173 @@ export type BodyPainZone =
   | 'hombro' 
   | 'columna_dorsal' 
   | 'lumbar' 
+  | 'codo'
+  | 'muneca_mano'
   | 'cadera' 
+  | 'cadera_pelvis'
   | 'rodilla' 
   | 'tobillo_pie' 
   | 'codo_muneca' 
-  | 'muscular_general';
+  | 'muscular_general'
+  | string;
+
+export interface LateralPostureEvaluation {
+  headPosition: 'alineada' | 'adelantada_leve' | 'adelantada_severa' | 'retraccion_cervical';
+  cervicalSpine: 'normal_fisiologica' | 'rectificacion_cervical' | 'hiperlordosis_cervical';
+  thoracicSpine: 'normal_armonica' | 'hipercifosis_dorsal' | 'espalda_plana_rectificada';
+  lumbarSpine: 'normal_fisiologica' | 'hiperlordosis_lumbar' | 'rectificacion_lumbar';
+  pelvisTilt: 'neutra' | 'anteversion_marcada' | 'retroversion_marcada';
+  kneeSagittal: 'neutra' | 'genu_recurvatum' | 'genu_flexo';
+  plumbLineDeviation: 'equilibrada' | 'anteriorizada' | 'posteriorizada';
+  notes?: string;
+}
+
+export interface VisualJointKnees {
+  frontalAlignment: 'neutro_simetrico' | 'genu_valgo' | 'genu_varo';
+  sagittalAlignment: 'neutro' | 'recurvatum' | 'flexo';
+  patellarTracking: 'centrada' | 'estrabismo_convergente' | 'estrabismo_divergente' | 'rotula_alta' | 'rotula_baja';
+  effusionInflammation: 'ausente' | 'derrame_leve' | 'derrame_a_tension' | 'bursitis_prerrotuliana';
+  details?: string;
+}
+
+export interface VisualJointAnkles {
+  hindfootAlignment: 'neutro' | 'valgo_retropie_pronacion' | 'varo_retropie_supinacion';
+  plantarArch: 'normal' | 'pie_plano_flexible' | 'pie_plano_rigido' | 'pie_cavo';
+  achillesTendon: 'alineado_vertical' | 'engrosamiento' | 'desviacion_medial' | 'desviacion_lateral';
+  details?: string;
+}
+
+export interface WilliamsExerciseTestItem {
+  id: string;
+  number: number;
+  name: string;
+  description: string;
+  executionStatus: 'correcto_sin_dolor' | 'molestia_leve' | 'dolor_limitante' | 'contraindicado';
+  painEVA: number;
+  repetitionsOrHold: string;
+  clinicalComment: string;
+}
+
+export interface WilliamsEvaluation {
+  enabled: boolean;
+  overallTolerance: 'excelente' | 'buena' | 'regular_con_molestia' | 'deficiente_dolorosa';
+  summaryNotes: string;
+  exercises: WilliamsExerciseTestItem[];
+}
+
+export interface PhysicalEvaluation {
+  history: string; // tiempo de evolución, mecanismo de lesión, agudo / subagudo / crónico
+  medicalAntecedents: string[]; // Antecedentes médicos previos (cirugías, traumatismos, hernias, comorbilidades)
+  medicalAntecedentsOther?: string;
+  medications: string[]; // Analgésicos, AINEs, relajantes musculares, etc.
+  medicationsOther?: string;
+  medicationsText?: string; // Cuadro de texto amplio para medicamentos
+  posturalVisualEvaluation: {
+    postureFindings: string[]; // Hallazgos posturales (cabeza adelantada, hombros protraídos, cifosis, lordosis, etc.)
+    postureNotes?: string;
+    primaryView?: 'anterior' | 'lateral' | 'posterior';
+    lateralView?: LateralPostureEvaluation;
+    visualKnees?: VisualJointKnees;
+    visualAnkles?: VisualJointAnkles;
+    visualComments?: string;
+  };
+}
+
+export interface JointFunctionalTestItem {
+  testName: string;
+  joint: string;
+  result: 'positivo' | 'negativo' | 'dudoso';
+  notes?: string;
+}
+
+export interface FunctionalEvaluation {
+  rangeOfMotionStatus: 'completo' | 'limitacion_leve' | 'limitacion_moderada' | 'bloqueo_severo';
+  rangeOfMotionDetails: string; // Grados y arcos de movimiento (flexión, extensión, rotaciones)
+  mobilityQuality: 'normal' | 'restringida' | 'hiperlaxitud' | 'compensatoria';
+  mobilityPassiveNotes?: string;
+  painOnMovement: {
+    movementPhase: 'inicio_arco' | 'rango_medio' | 'rango_final' | 'en_carga' | 'sin_dolor';
+    painNature: 'punzante' | 'sordo' | 'urente_quemante' | 'opresivo' | 'irradiado';
+    dynamicPainEVA: number;
+    triggeringMovement?: string;
+  };
+  functionalJointTests: JointFunctionalTestItem[];
+  palpationPainZone: {
+    triggerPoints: string[];
+    muscleTone: 'normal' | 'hipertonia_espasmo' | 'hipotonia' | 'contractura_palpable';
+    temperatureEdema: 'normal' | 'calor_inflamatorio' | 'edema_leve' | 'crepitacion';
+    tenderZoneNotes: string;
+  };
+  williamsEvaluation?: WilliamsEvaluation;
+}
+
+export interface ExerciseCommentWithImage {
+  id: string;
+  comment: string;
+  imageUrl?: string;
+  imageTitle?: string;
+  createdAt?: string;
+}
+
+export interface ExerciseItem {
+  id: string;
+  name: string;
+  series: number;
+  repsOrTime: string;
+  restSeconds: number;
+  frequencyPerWeek?: string;
+  intensityOrLoad?: string;
+  techniqueTips?: string;
+  targetZone?: string;
+  imageUrl?: string; // Imagen principal ilustrativa
+  imageCaption?: string;
+  commentsWithImages?: ExerciseCommentWithImage[]; // Imágenes por comentario
+}
+
+export interface CustomPhysioTreatmentItem {
+  id: string;
+  name: string;
+  category: 'agentes_fisicos' | 'terapia_manual' | 'ejercicio_terapeutico' | 'puncion_seca' | 'vendaje' | 'otro';
+  dosage: string; // ej. "100 Hz, 15 min, 25 mA"
+  notes?: string;
+  applied: boolean;
+}
+
+export interface ExerciseDosage {
+  customCardTitle: string;
+  customCardFrequency: string; // ej. "3 veces por semana en días alternos"
+  customExercises: ExerciseItem[];
+  progressiveLoads: {
+    phase: 'descarga_isometrica' | 'movilidad_sin_carga' | 'carga_ligera_adaptativa' | 'sobrecarga_progresiva' | 'retorno_deportivo';
+    maxRecommendedKg?: number;
+    progressionCriteria: string;
+  };
+  exerciseAdaptation: {
+    allowedExercises: string[];
+    prohibitedExercises: string[];
+    adaptationNotes: string;
+  };
+  passiveMobility: {
+    techniques: string[];
+    notes?: string;
+  };
+  resistance: {
+    intensity: 'baja' | 'moderada' | 'alta';
+    details: string;
+  };
+  proprioception: {
+    exercises: string[];
+    level: 'inicial' | 'intermedio' | 'avanzado';
+  };
+  vestibular: {
+    enabled: boolean;
+    details?: string;
+  };
+  power: {
+    status: 'contraindicado' | 'fase_preparatoria' | 'pliometria_controlada' | 'potencia_plena';
+    details?: string;
+  };
+}
 
 export interface PhysiotherapySessionRecord {
   id: string;
@@ -545,17 +707,58 @@ export interface PhysiotherapySessionRecord {
   // Clinical fields & link with gym registration medical restrictions
   initialMedicalRestrictions: string; // Restricciones que se escribieron al inscribir al alumno
   consultationReason: string; // Diagnóstico inicial / Motivo de consulta
-  affectedZone: BodyPainZone;
+  affectedZone?: BodyPainZone; // Compatibilidad hacia atrás
+  affectedZones: BodyPainZone[]; // Múltiples zonas afectadas
   painLevelEVA: number; // Escala EVA 0 a 10
-  posturalEvaluation: string; // Evaluación postural y biomecánica
-  rangeOfMotion: string; // Rango de movilidad articular (ROM)
-  functionalTests: string; // Pruebas ortopédicas y funcionales realizadas
+  posturalEvaluation: string; // Evaluación postural y biomecánica (texto resumen)
+  rangeOfMotion: string; // Rango de movilidad articular (ROM) (texto resumen)
+  functionalTests: string; // Pruebas ortopédicas y funcionales realizadas (texto resumen)
   treatmentsApplied: string[]; // Técnicas aplicadas (ej. Electroterapia TENS, Crioterapia, Punción seca, etc.)
+  editableTreatments?: CustomPhysioTreatmentItem[]; // Tratamiento y técnicas editables con dosificación
   gymWorkoutRestrictions: string; // Restricciones específicas de ejercicio para el gimnasio
   homeIndications: string; // Pautas y estiramientos para casa
   evolutionNotes: string; // Notas de progreso y evolución clínica
   sessionNumber: number; // # de sesión en el historial
   nextAppointmentDate?: string;
+  // Detailed modular evaluations
+  physicalEvaluation?: PhysicalEvaluation;
+  functionalEvaluation?: FunctionalEvaluation;
+  exerciseDosage?: ExerciseDosage;
+  studentReportSentAt?: string;
+  studentReportDeliveryMethod?: 'whatsapp' | 'email' | 'in_app' | 'printed';
+  // Observaciones dinámicas que el fisioterapeuta puede agregar, editar o eliminar
+  additionalObservations?: string[];
+  patientFriendlySummary?: string; // Explicación fácil de entender para el alumno
+  improvementStatus?: 'notable_mejora' | 'mejora_leve' | 'estable' | 'en_evaluacion' | 'empeoramiento';
+  improvementPercentage?: number;
+  zoneNotes?: Record<string, string>;
+}
+
+export interface EvaluationTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  affectedZones: BodyPainZone[];
+  consultationReason: string;
+  painLevelEVA: number;
+  postureFindings: string[];
+  postureNotes?: string;
+  romStatus: 'completo' | 'limitado_leve' | 'limitado_moderado' | 'severamente_limitado';
+  romDetails: string;
+  painPhase: 'inicio_movimiento' | 'arco_medio' | 'final_rango' | 'todo_el_recorrido';
+  dynamicPainEVA: number;
+  painNature: string;
+  functionalTests: JointFunctionalTestItem[];
+  muscleTone: 'normotono' | 'hipertono_espasmo' | 'contractura_focal' | 'hipotono';
+  tempEdema: 'normotermico' | 'calor_local' | 'edema_leve' | 'edema_moderado';
+  tenderNotes: string;
+  exerciseDosage: ExerciseDosage;
+  gymRestrictions: string;
+  homeIndications: string;
+  patientFriendlySummary: string;
+  additionalObservations: string[];
+  isCustom?: boolean;
 }
 
 // --- APPOINTMENT BOOKING & SCHEDULES (NUTRICIÓN & FISIOTERAPIA) ---

@@ -27,12 +27,15 @@ import {
 import { 
   LineChart, 
   Line, 
+  AreaChart,
+  Area,
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Legend 
+  Legend,
+  ReferenceLine
 } from 'recharts';
 import { useGym } from '../../context/GymContext';
 import { BodyAssessment, Member, AnthropometricPerimeters, BioimpedanceData } from '../../types/gym';
@@ -45,6 +48,7 @@ export const MeasurementsModule: React.FC = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<string>(members[0]?.id || '');
   const [searchMemberQuery, setSearchMemberQuery] = useState('');
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null);
+  const [chartMetricFilter, setChartMetricFilter] = useState<'all' | 'weight' | 'composition' | 'perimeters'>('all');
 
   // New Assessment Modal State
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -610,23 +614,137 @@ export const MeasurementsModule: React.FC = () => {
                 {/* Evolution Chart with Recharts */}
                 {chartData.length > 0 && (
                   <div className="pt-4 border-t border-slate-100 space-y-3">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Gráfica de Evolución: Peso (kg) vs Masa Muscular (kg) vs % Grasa
-                    </h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                          <Activity className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Curva de Evolución & Composición Corporal</span>
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          Haz clic en los filtros para aislar peso, grasa, masa muscular o perímetros
+                        </p>
+                      </div>
+
+                      {/* Filter Buttons */}
+                      <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg border border-slate-200">
+                        <button
+                          type="button"
+                          onClick={() => setChartMetricFilter('all')}
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold cursor-pointer transition-colors ${
+                            chartMetricFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                          }`}
+                        >
+                          Integral
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setChartMetricFilter('weight')}
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold cursor-pointer transition-colors ${
+                            chartMetricFilter === 'weight' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-slate-800'
+                          }`}
+                        >
+                          Peso
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setChartMetricFilter('composition')}
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold cursor-pointer transition-colors ${
+                            chartMetricFilter === 'composition' ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:text-slate-800'
+                          }`}
+                        >
+                          Grasa vs Músculo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setChartMetricFilter('perimeters')}
+                          className={`px-2 py-0.5 rounded text-[11px] font-bold cursor-pointer transition-colors ${
+                            chartMetricFilter === 'perimeters' ? 'bg-purple-600 text-white' : 'text-slate-500 hover:text-slate-800'
+                          }`}
+                        >
+                          Perímetros
+                        </button>
+                      </div>
+                    </div>
+
                     <div className="h-64 w-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                          <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                          <YAxis tick={{ fontSize: 11 }} />
+                        <LineChart data={chartData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                          <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#94a3b8" />
+                          <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" domain={['dataMin - 3', 'dataMax + 3']} />
                           <Tooltip 
-                            contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', color: '#fff', fontSize: '12px' }}
+                            contentStyle={{ 
+                              backgroundColor: '#0f172a', 
+                              borderColor: '#1e293b', 
+                              borderRadius: '10px', 
+                              color: '#fff', 
+                              fontSize: '11px',
+                              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+                            }}
+                            formatter={(val: any, name: any) => [
+                              `${val} ${name === 'grasaPct' ? '%' : name === 'cintura' || name === 'cadera' || name === 'pecho' || name === 'brazo' ? 'cm' : 'kg'}`,
+                              name === 'peso' ? 'Peso Corporal' : name === 'musculoKg' ? 'Masa Muscular' : name === 'grasaPct' ? '% Grasa' : name === 'cintura' ? 'Cintura' : name === 'cadera' ? 'Cadera' : name === 'pecho' ? 'Pecho' : 'Brazo'
+                            ]}
+                            labelFormatter={(lbl) => `Fecha: ${lbl}`}
                           />
                           <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                          <Line type="monotone" dataKey="peso" name="Peso (kg)" stroke="#2563eb" strokeWidth={2.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                          <Line type="monotone" dataKey="musculoKg" name="Masa Muscular (kg)" stroke="#10b981" strokeWidth={2} dot={{ r: 4 }} />
-                          <Line type="monotone" dataKey="grasaPct" name="% Grasa Corporal" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4 }} />
-                          <Line type="monotone" dataKey="cintura" name="Cintura (cm)" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="4 4" dot={{ r: 3 }} />
+
+                          {(chartMetricFilter === 'all' || chartMetricFilter === 'weight') && (
+                            <Line 
+                              type="monotone" 
+                              dataKey="peso" 
+                              name="Peso (kg)" 
+                              stroke="#2563eb" 
+                              strokeWidth={2.5} 
+                              dot={{ r: 4 }} 
+                              activeDot={{ r: 7, stroke: '#ffffff', strokeWidth: 2 }} 
+                            />
+                          )}
+
+                          {(chartMetricFilter === 'all' || chartMetricFilter === 'composition') && (
+                            <>
+                              <Line 
+                                type="monotone" 
+                                dataKey="musculoKg" 
+                                name="Masa Muscular (kg)" 
+                                stroke="#10b981" 
+                                strokeWidth={2.2} 
+                                dot={{ r: 4 }} 
+                                activeDot={{ r: 6 }} 
+                              />
+                              <Line 
+                                type="monotone" 
+                                dataKey="grasaPct" 
+                                name="% Grasa Corporal" 
+                                stroke="#f59e0b" 
+                                strokeWidth={2.2} 
+                                dot={{ r: 4 }} 
+                                activeDot={{ r: 6 }} 
+                              />
+                            </>
+                          )}
+
+                          {(chartMetricFilter === 'all' || chartMetricFilter === 'perimeters') && (
+                            <>
+                              <Line 
+                                type="monotone" 
+                                dataKey="cintura" 
+                                name="Cintura (cm)" 
+                                stroke="#8b5cf6" 
+                                strokeWidth={2} 
+                                strokeDasharray="4 4" 
+                                dot={{ r: 3 }} 
+                              />
+                              <Line 
+                                type="monotone" 
+                                dataKey="brazo" 
+                                name="Brazo (cm)" 
+                                stroke="#ec4899" 
+                                strokeWidth={1.8} 
+                                dot={{ r: 3 }} 
+                              />
+                            </>
+                          )}
                         </LineChart>
                       </ResponsiveContainer>
                     </div>

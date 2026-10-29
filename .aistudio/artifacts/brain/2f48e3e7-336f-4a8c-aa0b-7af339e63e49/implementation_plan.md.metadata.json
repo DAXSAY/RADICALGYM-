@@ -1,0 +1,6 @@
+{
+  "summary": "Plan de implementación completo para las mejoras solicitadas:\n1. Plantillas de Evaluación en Fisioterapia (guardar, cargar y gestionar protocolos predefinidos como Lumbalgia, Tendinitis, Cervicalgia, Esguince de tobillo y plantillas personalizadas).\n2. Sección de Seguimiento Evolutivo con gráfico comparativo de rangos articulares (ROM) y escalas de dolor (EVA) a través del tiempo.\n3. Generación y descarga de Reporte PDF profesional con diagnóstico, zonas afectadas, cartilla de ejercicios con ilustraciones y observaciones clínicas.\n4. Módulo de Ventas / POS con capacidad para agregar productos con imágenes (URL, presets de fitness y previsualización).\n5. Unificación limpia y sin redundancia del módulo de Medidas Antropométricas y Bioimpedancia.\n6. Editor de comidas en Plan Nutricional con entrada directa del alimento y casillero numérico/gramaje contiguo.",
+  "updatedAt": "2026-10-15T16:02:00.095515072Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

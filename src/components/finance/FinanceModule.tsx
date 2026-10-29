@@ -42,7 +42,11 @@ import {
   PieChart, 
   Pie, 
   Cell,
-  Legend
+  Legend,
+  AreaChart,
+  Area,
+  CartesianGrid,
+  Line
 } from 'recharts';
 import confetti from 'canvas-confetti';
 
@@ -66,6 +70,35 @@ export const FinanceModule: React.FC<FinanceModuleProps> = ({ onOpenNewExpenseMo
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Interactive Chart Controls
+  const [financeChartView, setFinanceChartView] = useState<'bars' | 'area'>('bars');
+  const [financePeriod, setFinancePeriod] = useState<'30d' | 'quarter' | 'year'>('30d');
+  const [hoveredExpenseSlice, setHoveredExpenseSlice] = useState<number | null>(null);
+
+  const financeComparativeData = useMemo(() => {
+    if (financePeriod === '30d') {
+      return [
+        { periodo: 'Sem 1', ingresos: 2450, egresos: 1800, margen: 650 },
+        { periodo: 'Sem 2', ingresos: 2890, egresos: 1250, margen: 1640 },
+        { periodo: 'Sem 3', ingresos: 3400, egresos: 2100, margen: 1300 },
+        { periodo: 'Sem 4', ingresos: 2980, egresos: 1950, margen: 1030 }
+      ];
+    }
+    if (financePeriod === 'quarter') {
+      return [
+        { periodo: 'Mes 1', ingresos: 9800, egresos: 6200, margen: 3600 },
+        { periodo: 'Mes 2', ingresos: 11200, egresos: 6900, margen: 4300 },
+        { periodo: 'Mes 3', ingresos: 12500, egresos: 7150, margen: 5350 }
+      ];
+    }
+    return [
+      { periodo: 'Q1', ingresos: 28500, egresos: 18200, margen: 10300 },
+      { periodo: 'Q2', ingresos: 32400, egresos: 19800, margen: 12600 },
+      { periodo: 'Q3', ingresos: 36100, egresos: 21400, margen: 14700 },
+      { periodo: 'Q4', ingresos: 39800, egresos: 22900, margen: 16900 }
+    ];
+  }, [financePeriod]);
   
   // Custom New Income modal
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
@@ -415,55 +448,258 @@ export const FinanceModule: React.FC<FinanceModuleProps> = ({ onOpenNewExpenseMo
 
           </div>
 
-          {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* =========================================================================
+              INTERACTIVE FINANCIAL ANALYTICS & CHARTS SUITE
+             ========================================================================= */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            {/* Expenses by Category Breakdown Pie */}
-            <div className="bg-white border border-gray-200 p-4 rounded-xl shadow-xs">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 mb-2">
-                <PieIcon className="w-3.5 h-3.5 text-blue-600" />
-                Distribución de Gastos
-              </h3>
-              
-              <div className="h-48 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={expensePieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={45}
-                      outerRadius={75}
-                      paddingAngle={3}
-                      dataKey="value"
+            {/* 1. Comparative Flow Chart (Ingresos vs Egresos vs Margen) - Col 7 */}
+            <div className="lg:col-span-7 bg-white border border-gray-200 p-5 rounded-2xl shadow-xs space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-600" />
+                    <span>Evolución Financiera & Flujo Operativo</span>
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Inspección dinámica de ingresos, gastos y margen de rentabilidad
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* View Type Toggle */}
+                  <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setFinanceChartView('bars')}
+                      className={`px-2 py-0.5 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                        financeChartView === 'bars' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
                     >
-                      {expensePieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '8px', fontSize: '11px', color: '#0f172a' }}
-                      formatter={(val: any) => [`S/ ${Number(val || 0).toFixed(2)}`, 'Monto']}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                      Barras
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFinanceChartView('area')}
+                      className={`px-2 py-0.5 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                        financeChartView === 'area' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      Área
+                    </button>
+                  </div>
+
+                  {/* Period Toggle */}
+                  <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setFinancePeriod('30d')}
+                      className={`px-2 py-0.5 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                        financePeriod === '30d' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      30 Días
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFinancePeriod('quarter')}
+                      className={`px-2 py-0.5 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                        financePeriod === 'quarter' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      Trimestre
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFinancePeriod('year')}
+                      className={`px-2 py-0.5 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                        financePeriod === 'year' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      Año
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-1 mt-1 divide-y divide-gray-100 text-[11px]">
-                {expensePieData.map(item => (
-                  <div key={item.name} className="flex items-center justify-between pt-1">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                      <span className="text-slate-600 truncate max-w-[140px]">{item.name}</span>
-                    </div>
-                    <span className="font-bold text-slate-900">S/ {(item.value || 0).toFixed(2)}</span>
-                  </div>
-                ))}
+              {/* Chart Canvas */}
+              <div className="h-60 w-full pt-1">
+                <ResponsiveContainer width="100%" height="100%">
+                  {financeChartView === 'bars' ? (
+                    <BarChart data={financeComparativeData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                      <XAxis dataKey="periodo" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
+                      <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `S/${v}`} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#0f172a', 
+                          borderColor: '#1e293b', 
+                          borderRadius: '12px', 
+                          color: '#fff', 
+                          fontSize: '11px',
+                          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)' 
+                        }}
+                        formatter={(val: any, name: any) => [
+                          `S/ ${Number(val).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`,
+                          name === 'ingresos' ? 'Ingresos' : name === 'egresos' ? 'Egresos' : 'Margen Neto'
+                        ]}
+                      />
+                      <Legend 
+                        wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+                        formatter={(v) => (
+                          <span className="text-slate-700 font-semibold uppercase text-[10px] tracking-wider">
+                            {v === 'ingresos' ? 'Ingresos' : v === 'egresos' ? 'Egresos' : 'Margen Neto'}
+                          </span>
+                        )}
+                      />
+                      <Bar dataKey="ingresos" fill="#10b981" radius={[4, 4, 0, 0]} barSize={20} />
+                      <Bar dataKey="egresos" fill="#f43f5e" radius={[4, 4, 0, 0]} barSize={20} />
+                      <Bar dataKey="margen" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} />
+                    </BarChart>
+                  ) : (
+                    <AreaChart data={financeComparativeData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="finIngresosGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+                        </linearGradient>
+                        <linearGradient id="finEgresosGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.02} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                      <XAxis dataKey="periodo" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
+                      <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `S/${v}`} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#0f172a', 
+                          borderColor: '#1e293b', 
+                          borderRadius: '12px', 
+                          color: '#fff', 
+                          fontSize: '11px',
+                          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)' 
+                        }}
+                        formatter={(val: any, name: any) => [
+                          `S/ ${Number(val).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`,
+                          name === 'ingresos' ? 'Ingresos' : name === 'egresos' ? 'Egresos' : 'Margen Neto'
+                        ]}
+                      />
+                      <Legend 
+                        wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+                        formatter={(v) => (
+                          <span className="text-slate-700 font-semibold uppercase text-[10px] tracking-wider">
+                            {v === 'ingresos' ? 'Ingresos' : v === 'egresos' ? 'Egresos' : 'Margen'}
+                          </span>
+                        )}
+                      />
+                      <Area type="monotone" dataKey="ingresos" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#finIngresosGrad)" activeDot={{ r: 5 }} />
+                      <Area type="monotone" dataKey="egresos" stroke="#f43f5e" strokeWidth={2.5} fillOpacity={1} fill="url(#finEgresosGrad)" activeDot={{ r: 5 }} />
+                      <Line type="monotone" dataKey="margen" stroke="#3b82f6" strokeWidth={2} strokeDasharray="3 3" dot={{ r: 3 }} />
+                    </AreaChart>
+                  )}
+                </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Transactions Ledger (Col 2-3) */}
-            <div className="lg:col-span-2 bg-white border border-gray-200 p-4 rounded-xl shadow-xs flex flex-col justify-between">
+            {/* 2. Interactive Expense Distribution Donut - Col 5 */}
+            <div className="lg:col-span-5 bg-white border border-gray-200 p-5 rounded-2xl shadow-xs space-y-3 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <PieIcon className="w-4 h-4 text-blue-600" />
+                    <span>Distribución de Gastos</span>
+                  </h3>
+                  {categoryFilter !== 'all' && (
+                    <button
+                      type="button"
+                      onClick={() => setCategoryFilter('all')}
+                      className="text-[10px] font-bold text-blue-600 hover:underline cursor-pointer bg-blue-50 px-2 py-0.5 rounded"
+                    >
+                      Limpiar Filtro
+                    </button>
+                  )}
+                </div>
+
+                <div className="h-44 w-full relative flex items-center justify-center my-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={expensePieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={75}
+                        paddingAngle={3}
+                        dataKey="value"
+                        onMouseEnter={(_, index) => setHoveredExpenseSlice(index)}
+                        onMouseLeave={() => setHoveredExpenseSlice(null)}
+                      >
+                        {expensePieData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={entry.color} 
+                            style={{
+                              filter: hoveredExpenseSlice === index ? 'drop-shadow(0px 0px 6px rgba(0,0,0,0.3))' : 'none',
+                              cursor: 'pointer',
+                              transform: hoveredExpenseSlice === index ? 'scale(1.05)' : 'scale(1)',
+                              transformOrigin: 'center center',
+                              transition: 'all 0.2s ease-out'
+                            }}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                        formatter={(val: any) => [`S/ ${Number(val || 0).toFixed(2)}`, 'Monto']}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-[9px] uppercase font-bold text-slate-400">Total Egresos</span>
+                    <span className="text-xs font-black text-slate-900">
+                      S/ {metrics.totalExpense.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Clickable Category Filter Chips */}
+                <div className="space-y-1 divide-y divide-gray-100 text-[11px] max-h-36 overflow-y-auto">
+                  {expensePieData.map((item, idx) => {
+                    const isHovered = hoveredExpenseSlice === idx;
+                    return (
+                      <button
+                        type="button"
+                        key={item.name}
+                        onClick={() => {
+                          // Find corresponding category code
+                          const matchCat = Object.keys(expenseCategoriesAgg).find(k => getCategoryLabel(k as any) === item.name);
+                          if (matchCat) {
+                            setCategoryFilter(categoryFilter === matchCat ? 'all' : matchCat);
+                          }
+                        }}
+                        onMouseEnter={() => setHoveredExpenseSlice(idx)}
+                        onMouseLeave={() => setHoveredExpenseSlice(null)}
+                        className={`w-full flex items-center justify-between py-1 px-1.5 rounded transition-all text-left cursor-pointer ${
+                          isHovered ? 'bg-slate-100 font-bold' : 'hover:bg-slate-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+                          <span className="text-slate-700 truncate max-w-[150px]">{item.name}</span>
+                        </div>
+                        <span className="font-bold text-slate-900">S/ {(item.value || 0).toFixed(2)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+            {/* Transactions Ledger Full Width */}
+            <div className="bg-white border border-gray-200 p-4 sm:p-5 rounded-2xl shadow-xs flex flex-col justify-between">
               <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
                   <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
@@ -568,8 +804,7 @@ export const FinanceModule: React.FC<FinanceModuleProps> = ({ onOpenNewExpenseMo
             </div>
 
           </div>
-        </div>
-      )}
+        )}
 
       {/* SECTION 2: STAFF PAYROLL, SALARIES & HOURS */}
       {activeTab === 'payroll' && (

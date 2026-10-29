@@ -602,6 +602,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 3.5,
     stock: 48,
     minStockAlert: 15,
+    image: 'https://images.unsplash.com/photo-1559839914-1b396e6dd86f?w=400&q=80',
     description: 'Agua de manantial natural en botella deportiva.'
   },
   {
@@ -613,6 +614,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 5.5,
     stock: 24,
     minStockAlert: 10,
+    image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=400&q=80',
     description: 'Bebida isotónica hidratante con electrolitos para reponer energía.'
   },
   {
@@ -624,6 +626,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 8.0,
     stock: 18,
     minStockAlert: 8,
+    image: 'https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=400&q=80',
     description: 'Bebida energética para antes de entrenar.'
   },
   {
@@ -635,6 +638,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 175.0,
     stock: 12,
     minStockAlert: 4,
+    image: 'https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=400&q=80',
     description: '24g de proteína de suero aislada y concentrada por porción con BCAAs y glutamina.'
   },
   {
@@ -646,6 +650,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 210.0,
     stock: 6,
     minStockAlert: 3,
+    image: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=400&q=80',
     description: 'Proteína 100% hidrolizada de máxima pureza, sin lactosa y de rápida absorción.'
   },
   {
@@ -657,6 +662,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 89.0,
     stock: 14,
     minStockAlert: 5,
+    image: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=400&q=80',
     description: 'Creatina ultra pura de grado farmacéutico para aumento de fuerza y volumen celular.'
   },
   {
@@ -668,6 +674,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 110.0,
     stock: 8,
     minStockAlert: 3,
+    image: 'https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=400&q=80',
     description: 'Fórmula pre-workout con cafeína, beta-alanina y nitratos para máxima congestión.'
   },
   {
@@ -679,6 +686,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 95.0,
     stock: 9,
     minStockAlert: 3,
+    image: 'https://images.unsplash.com/photo-1579722820308-d74e571900a9?w=400&q=80',
     description: 'Aminoácidos ramificados para intra-entrenamiento y recuperación muscular.'
   },
   {
@@ -690,6 +698,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 12.0,
     stock: 35,
     minStockAlert: 10,
+    image: 'https://images.unsplash.com/photo-1622484216850-d7d8a6df2e21?w=400&q=80',
     description: '21g de proteína y menos de 1g de azúcar con deliciosa textura crocante.'
   },
   {
@@ -701,6 +710,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 9.5,
     stock: 28,
     minStockAlert: 8,
+    image: 'https://images.unsplash.com/photo-1622484216850-d7d8a6df2e21?w=400&q=80',
     description: 'Barrita wafer proteica ligera y crujiente.'
   },
   {
@@ -712,6 +722,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 29.0,
     stock: 20,
     minStockAlert: 5,
+    image: 'https://images.unsplash.com/photo-1577221084712-45b0445b2b00?w=400&q=80',
     description: 'Vaso mezclador libre de BPA con bola batidora de acero inoxidable.'
   },
   {
@@ -723,6 +734,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 25.0,
     stock: 15,
     minStockAlert: 4,
+    image: 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?w=400&q=80',
     description: 'Correas resistentes para agarre en peso muerto y remos pesados.'
   },
   {
@@ -734,7 +746,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     salePrice: 75.0,
     stock: 5,
     minStockAlert: 2,
-    description: 'Soporte abdominal y lumbar para sentadillas y levantamientos pesados.'
+    image: 'https://images.unsplash.com/photo-1606902965551-dce093cda6e7?w=400&q=80',
+    description: 'Cinturón de soporte lumbopélvico para sentadillas y levantamientos.'
   },
   {
     id: 'prod-14',
@@ -2037,6 +2050,16 @@ export const INITIAL_USERS: AppUser[] = [
     active: true
   },
   {
+    id: 'usr-reception-1',
+    username: 'valeria.recepcion',
+    fullName: 'Valeria Gómez (Recepción & Caja)',
+    email: 'recepcion@gymcontrol.com',
+    role: 'reception',
+    phone: '+51987333444',
+    photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
+    active: true
+  },
+  {
     id: 'usr-student-1',
     username: 'alejandro.ramos',
     fullName: 'Alejandro Ramos Silva',
@@ -2060,10 +2083,57 @@ export const INITIAL_USERS: AppUser[] = [
   }
 ];
 
-// --- INITIAL SPINNING ACCESS CODES (FOR YAPE SCREENSHOT PAYMENTS) ---
+// --- INITIAL SPINNING ACCESS CODES (FOR YAPE SCREENSHOT PAYMENTS & DEMONSTRATION) ---
 export const INITIAL_SPINNING_ACCESS_CODES: SpinningAccessCode[] = [
   {
-    id: 'code-1',
+    id: 'code-demo-1',
+    code: 'SPIN-DEMO-2026',
+    sessionId: 'spin-sess-1',
+    sessionTitle: '🚴 Power Climb HIIT Ride',
+    issuedToName: 'Alejandro Ramos Silva (Demo Alumno)',
+    issuedToPhone: '+51987456123',
+    memberId: 'mem-1',
+    isExternal: false,
+    amountPaid: 20,
+    paymentMethod: 'yape_plin',
+    status: 'active',
+    issuedAt: '2026-08-30 08:00',
+    issuedByTrainerName: 'Carlos Mendoza',
+    notes: 'Código especial para presentación y demostración en vivo del sistema de reservas tipo cine.'
+  },
+  {
+    id: 'code-demo-2',
+    code: 'VIP-RIDER-100',
+    sessionId: 'spin-sess-3',
+    sessionTitle: '⚡ Sunset Beats & Cadence Ride',
+    issuedToName: 'Lucía Fernández Torres (Demo VIP)',
+    issuedToPhone: '+51944556677',
+    memberId: 'mem-2',
+    isExternal: false,
+    amountPaid: 25,
+    paymentMethod: 'tarjeta',
+    status: 'active',
+    issuedAt: '2026-08-30 08:10',
+    issuedByTrainerName: 'Valeria Gómez',
+    notes: 'Pase VIP para reserva de bicicleta panorámica en tarima elevada.'
+  },
+  {
+    id: 'code-demo-3',
+    code: 'FREE-PASS-SPIN',
+    sessionId: 'spin-sess-2',
+    sessionTitle: '🔥 Cardio RPM Blast',
+    issuedToName: 'Cliente Demostración (Invitado)',
+    issuedToPhone: '+51999888777',
+    isExternal: true,
+    amountPaid: 0,
+    paymentMethod: 'efectivo',
+    status: 'active',
+    issuedAt: '2026-08-30 08:20',
+    issuedByTrainerName: 'Sofía Valdivia',
+    notes: 'Pase libre de cortesía para prueba rápida de reserva tipo cine.'
+  },
+  {
+    id: 'code-demo-4',
     code: 'YAPE-8421',
     sessionId: 'spin-sess-1',
     sessionTitle: '🚴 Power Climb HIIT Ride',
@@ -2079,7 +2149,38 @@ export const INITIAL_SPINNING_ACCESS_CODES: SpinningAccessCode[] = [
     notes: 'Comprobante Yape verificado por WhatsApp. Pase de sesión individual.'
   },
   {
-    id: 'code-2',
+    id: 'code-demo-5',
+    code: 'PLIN-5520',
+    sessionId: 'spin-sess-1',
+    sessionTitle: '🚴 Power Climb HIIT Ride',
+    issuedToName: 'Renzo Morales Dávila',
+    issuedToPhone: '+51988112233',
+    isExternal: true,
+    amountPaid: 20,
+    paymentMethod: 'yape_plin',
+    status: 'active',
+    issuedAt: '2026-08-30 08:25',
+    issuedByTrainerName: 'Carlos Mendoza',
+    notes: 'Comprobante Plin confirmado. Ideal para demostración con cliente externo.'
+  },
+  {
+    id: 'code-demo-6',
+    code: 'PROMO-SPIN-20',
+    sessionId: 'spin-sess-3',
+    sessionTitle: '⚡ Sunset Beats & Cadence Ride',
+    issuedToName: 'Demo Alumno Nuevo',
+    issuedToPhone: '+51977665544',
+    memberId: 'mem-3',
+    isExternal: false,
+    amountPaid: 20,
+    paymentMethod: 'yape_plin',
+    status: 'active',
+    issuedAt: '2026-08-30 08:35',
+    issuedByTrainerName: 'Valeria Gómez',
+    notes: 'Cupón promocional con reserva remota desde celular.'
+  },
+  {
+    id: 'code-demo-7',
     code: 'SPIN-9315',
     sessionId: 'spin-sess-3',
     sessionTitle: '⚡ Sunset Beats & Cadence Ride',
@@ -2095,7 +2196,7 @@ export const INITIAL_SPINNING_ACCESS_CODES: SpinningAccessCode[] = [
     notes: 'Pago Yape confirmado por recepción. Puede canjear desde su casa.'
   },
   {
-    id: 'code-3',
+    id: 'code-demo-8',
     code: 'PASE-7720',
     sessionId: 'spin-sess-2',
     sessionTitle: '🔥 Cardio RPM Blast',
@@ -2451,6 +2552,7 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     initialMedicalRestrictions: 'Cirugía meniscal derecha hace 2 años, molestia lumbar ocasional bajo cargas axiales elevadas.',
     consultationReason: 'Lumbalgia aguda mecánica post-sentadilla pesada con irradiación glútea derecha.',
     affectedZone: 'lumbar',
+    affectedZones: ['lumbar', 'cadera'],
     painLevelEVA: 7,
     posturalEvaluation: 'Hiperlordosis lumbar compensatoria, báscula pélvica anterior 8°, acortamiento de psoas y debilidad glútea.',
     rangeOfMotion: 'Flexión de tronco limitada al 60% por espasmo doloroso; extensión conservada.',
@@ -2466,7 +2568,81 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     homeIndications: 'Aplicar calor 15 min por la noche. Estiramiento de psoas e isquiotibiales 3x30s sin forzar arco lumbar. Evitar sedentarismo prolongado.',
     evolutionNotes: 'El paciente acudió con marcha antiálgica. Al finalizar la punción seca y TENS, el dolor descendió de EVA 7 a EVA 3. Buena tolerancia.',
     sessionNumber: 1,
-    nextAppointmentDate: '2026-08-29'
+    nextAppointmentDate: '2026-08-29',
+    physicalEvaluation: {
+      history: 'Cuadro de inicio agudo hace 4 días tras serie pesada de sentadilla (120kg). Sensación de pinchazo lumbar con contractura refleja progresiva.',
+      medicalAntecedents: ['Cirugía meniscal rodilla derecha (artroscopía 2024)', 'Tendinitis rotuliana previa'],
+      medications: ['Ibuprofeno 400mg c/8h', 'Clorzoxazona (relajante muscular) por las noches'],
+      posturalVisualEvaluation: {
+        postureFindings: ['Hiperlordosis lumbar', 'Báscula pélvica anterior', 'Hombros en ligera antepulsión'],
+        primaryView: 'lateral',
+        postureNotes: 'Compensación pélvica con inhibición refleja de glúteo mayor y activación constante de paravertebrales.'
+      }
+    },
+    functionalEvaluation: {
+      rangeOfMotionStatus: 'limitacion_moderada',
+      rangeOfMotionDetails: 'Flexión anterior limitada al 60% de arco normal. Extensión 80%. Rotaciones axiales libres.',
+      mobilityQuality: 'compensatoria',
+      mobilityPassiveNotes: 'Tope muscular espástico doloroso en flexión lumbosacra.',
+      painOnMovement: {
+        movementPhase: 'rango_medio',
+        painNature: 'punzante',
+        dynamicPainEVA: 7,
+        triggeringMovement: 'Flexión de tronco hacia adelante y transición de sedente a bipedo'
+      },
+      functionalJointTests: [
+        { testName: 'Test de Thomas', joint: 'Cadera / Psoas', result: 'positivo', notes: 'Retracción severa de flexores de cadera derecha' },
+        { testName: 'Test de Lasègue', joint: 'Columna Lumbar', result: 'negativo', notes: 'Sin irradiación neurológica radicular L5-S1' },
+        { testName: 'Test de Bragard', joint: 'Columna Lumbar', result: 'negativo', notes: 'Dorsiflexión de tobillo no exacerba dolor' }
+      ],
+      palpationPainZone: {
+        triggerPoints: ['Cuadrado lumbar derecho', 'Glúteo medio porción posterosuperior', 'Erectores lumbares L3-L5'],
+        muscleTone: 'hipertonia_espasmo',
+        temperatureEdema: 'calor_inflamatorio',
+        tenderZoneNotes: 'Banda tensa hiperirritable en cuadrado lumbar ipsilateral con dolor referido a cresta ilíaca.'
+      }
+    },
+    exerciseDosage: {
+      customCardTitle: 'Protocolo de Descompresión Lumbar & Reactivación Pélvica Fase I',
+      customCardFrequency: '4 días por semana (sesiones de 25-30 minutos)',
+      customExercises: [
+        { id: 'ex-1', name: 'Cat-Camel (Gato-Camello) Suave', series: 3, repsOrTime: '10 repeticiones lentas', restSeconds: 45, techniqueTips: 'Movimiento ondulatorio sin forzar rango final doloroso', targetZone: 'Columna Lumbar y Torácica' },
+        { id: 'ex-2', name: 'Deadbug con Soporte Isométrico', series: 3, repsOrTime: '8 reps por lado', restSeconds: 60, techniqueTips: 'Mantener espalda baja en contacto con el suelo activando transverso', targetZone: 'Core y Estabilidad Lumbo-Pélvica' },
+        { id: 'ex-3', name: 'Puente de Glúteos Bipodal con Pausa 3s', series: 4, repsOrTime: '12 repeticiones', restSeconds: 60, techniqueTips: 'Apretar glúteos arriba sin hiperextender la zona lumbar', targetZone: 'Glúteo Mayor y Cadena Posterior' },
+        { id: 'ex-4', name: 'Bird-Dog Guiado con Apoyo en Cuadrupedia', series: 3, repsOrTime: '10 reps alternadas', restSeconds: 45, techniqueTips: 'Tronco inmóvil como una mesa, sin rotar cadera', targetZone: 'Multífidos y Erectores Espinales' }
+      ],
+      progressiveLoads: {
+        phase: 'descarga_isometrica',
+        maxRecommendedKg: 0,
+        progressionCriteria: 'Transicionar a cargas de fuerza cuando el dolor EVA sea inferior a 3/10 de manera sostenida.'
+      },
+      exerciseAdaptation: {
+        allowedExercises: ['Prensa inclinada a 45° guiada con soporte total', 'Curl femoral tumbado', 'Press de banca plano con pies apoyados', 'Jalón al pecho con agarre neutro'],
+        prohibitedExercises: ['Sentadilla libre con barra trasnuca', 'Peso muerto convencional con barra', 'Buenos días', 'Press militar de pie con barra libre'],
+        adaptationNotes: 'Prohibida toda carga axial directa sobre columna vertebral por los primeros 14 días.'
+      },
+      passiveMobility: {
+        techniques: ['Estiramiento suave de psoas ilíaco en posición de caballero', 'Descompresión lumbosacra con fitball'],
+        notes: 'Mantener cada estiramiento 30 segundos sin rebotes.'
+      },
+      resistance: {
+        intensity: 'baja',
+        details: 'Trabajo isométrico de estabilización profunda y control motor a baja carga.'
+      },
+      proprioception: {
+        exercises: ['Apoyo monopodal con ojos abiertos en suelo firme', 'Transferencias de peso anteroposterior sobre colchoneta'],
+        level: 'inicial'
+      },
+      vestibular: {
+        enabled: false
+      },
+      power: {
+        status: 'contraindicado',
+        details: 'Pliometría e impacto totalmente suspendidos hasta remisión del cuadro inflamatorio.'
+      }
+    },
+    studentReportSentAt: '2026-08-25 10:45 AM',
+    studentReportDeliveryMethod: 'whatsapp'
   },
   {
     id: 'phy-rec-2',
@@ -2481,6 +2657,7 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     initialMedicalRestrictions: 'Cirugía meniscal derecha hace 2 años, molestia lumbar ocasional bajo cargas axiales elevadas.',
     consultationReason: 'Control evolutivo de lumbalgia y reintroducción de patrones de fuerza.',
     affectedZone: 'lumbar',
+    affectedZones: ['lumbar'],
     painLevelEVA: 2,
     posturalEvaluation: 'Mejora en alineación de pelvis, menor tensión en erectores espinales.',
     rangeOfMotion: 'Flexión anterior al 95% con mínima molestia final. Extensión y rotaciones libres.',
@@ -2495,7 +2672,77 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     homeIndications: 'Continuar con rutina de movilidad torácica y estabilización de core (Deadbug, Bird-dog) 3 veces por semana.',
     evolutionNotes: 'Evolución clínica excelente (EVA 2/10). El alumno reporta retomar actividades laborales sin dolor y buen descanso nocturno.',
     sessionNumber: 2,
-    nextAppointmentDate: '2026-09-08'
+    nextAppointmentDate: '2026-09-08',
+    physicalEvaluation: {
+      history: 'Segunda sesión de control. Dolor en remisión marcado tras descanso y protocolo de descompresión.',
+      medicalAntecedents: ['Cirugía meniscal rodilla derecha (2024)'],
+      medications: ['Suspendidos analgésicos; sin necesidad de fármacos actuales'],
+      posturalVisualEvaluation: {
+        postureFindings: ['Mejoría en alineación espinal', 'Báscula pélvica corregida a neutra'],
+        primaryView: 'posterior'
+      }
+    },
+    functionalEvaluation: {
+      rangeOfMotionStatus: 'completo',
+      rangeOfMotionDetails: 'Movilidad activa recuperada al 95% en todos los planos de la columna vertebral.',
+      mobilityQuality: 'normal',
+      painOnMovement: {
+        movementPhase: 'sin_dolor',
+        painNature: 'sordo',
+        dynamicPainEVA: 2,
+        triggeringMovement: 'Mínima molestia únicamente al forzar flexión máxima sostenida'
+      },
+      functionalJointTests: [
+        { testName: 'Test de Lasègue', joint: 'Columna Lumbar', result: 'negativo' },
+        { testName: 'Test de Trendelenburg', joint: 'Cadera / Glúteo medio', result: 'negativo', notes: 'Estabilidad de pelvis conservada' }
+      ],
+      palpationPainZone: {
+        triggerPoints: ['Puntos gatillo desactivados'],
+        muscleTone: 'normal',
+        temperatureEdema: 'normal',
+        tenderZoneNotes: 'Tono muscular paravertebral homogéneo sin contracturas palpables activas.'
+      }
+    },
+    exerciseDosage: {
+      customCardTitle: 'Protocolo de Progresión de Fuerza & Bisagra de Cadera Fase II',
+      customCardFrequency: '3 veces por semana',
+      customExercises: [
+        { id: 'ex-201', name: 'Sentadilla Goblet con Kettlebell al Pecho', series: 3, repsOrTime: '10 reps (12kg)', restSeconds: 60, techniqueTips: 'Tronco erguido, empujar rodillas hacia afuera', targetZone: 'Cuádriceps y Cadena Posterior' },
+        { id: 'ex-202', name: 'Hip Thrust con Mancuerna en Banco', series: 3, repsOrTime: '12 reps (14kg)', restSeconds: 60, techniqueTips: 'Pausa de 2 segundos en contracción máxima', targetZone: 'Glúteos e Isquiotibiales' },
+        { id: 'ex-203', name: 'Plancha Abdominal Frontal con Toque de Hombros', series: 3, repsOrTime: '45 segundos', restSeconds: 45, techniqueTips: 'Antirrotación pélvica estricta', targetZone: 'Core Funcional' }
+      ],
+      progressiveLoads: {
+        phase: 'carga_ligera_adaptativa',
+        maxRecommendedKg: 20,
+        progressionCriteria: 'Aumentar 2kg por semana mientras no se sobrepase EVA 2.'
+      },
+      exerciseAdaptation: {
+        allowedExercises: ['Sentadilla Goblet hasta 16kg', 'Prensa inclinada', 'Hip Thrust guiado', 'Remo en polea baja con soporte'],
+        prohibitedExercises: ['Sentadilla con barra trasnuca > 40kg', 'Peso muerto sumo pesado'],
+        adaptationNotes: 'Progresar de forma gradual priorizando control postural estricto.'
+      },
+      passiveMobility: {
+        techniques: ['Movilidad torácica con foam roller', 'Rotaciones torácicas en cuadrupedia'],
+        notes: 'Realizar antes de iniciar el calentamiento de fuerza.'
+      },
+      resistance: {
+        intensity: 'moderada',
+        details: 'Series submáximas con RIR 3-4 (3 repeticiones en recámara).'
+      },
+      proprioception: {
+        exercises: ['Peso muerto a una pierna sin peso con control propioceptivo', 'Apoyo monopodal en Bosu'],
+        level: 'intermedio'
+      },
+      vestibular: {
+        enabled: false
+      },
+      power: {
+        status: 'fase_preparatoria',
+        details: 'Lanzamientos de balón medicinal hacia el suelo sin salto.'
+      }
+    },
+    studentReportSentAt: '2026-08-29 10:50 AM',
+    studentReportDeliveryMethod: 'whatsapp'
   },
   {
     id: 'phy-rec-3',
@@ -2510,6 +2757,7 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     initialMedicalRestrictions: 'Asma inducida por esfuerzo leve, antecedente de esguince de tobillo grado II en 2024.',
     consultationReason: 'Síndrome de la cintilla iliotibial (fricción lateral de rodilla izquierda) y sobrecarga de tensor de fascia lata tras running.',
     affectedZone: 'rodilla',
+    affectedZones: ['rodilla', 'cadera'],
     painLevelEVA: 6,
     posturalEvaluation: 'Valgo dinámico en rodilla izquierda durante apoyo unipodal.',
     rangeOfMotion: 'Flexión de rodilla completa pero dolorosa entre los 25° y 30° al descender escaleras.',
@@ -2524,7 +2772,80 @@ export const INITIAL_PHYSIO_RECORDS: PhysiotherapySessionRecord[] = [
     homeIndications: 'Aplicar hielo 15 min 2 veces al día. Auto-liberación miofascial con pelota de tenis en glúteo mayor y medio.',
     evolutionNotes: 'Disminución inmediata de la sensación de roce lateral. La alumna comprende la restricción temporal de impacto.',
     sessionNumber: 1,
-    nextAppointmentDate: '2026-09-02'
+    nextAppointmentDate: '2026-09-02',
+    physicalEvaluation: {
+      history: 'Dolor punzante lateral en rodilla izquierda al correr más de 3 km. Inicio insidioso hace 3 semanas incrementando tras tirada larga.',
+      medicalAntecedents: ['Esguince de tobillo izquierdo grado II (2024)', 'Asma por esfuerzo'],
+      medications: ['Salbutamol inhalador preventivo previo a ejercicio aeróbico'],
+      posturalVisualEvaluation: {
+        postureFindings: ['Valgo de rodillas', 'Pronación de antepié izquierdo', 'Báscula pélvica lateral'],
+        primaryView: 'anterior',
+        postureNotes: 'Déficit de control excéntrico de glúteo medio en fase de apoyo monopedal.'
+      }
+    },
+    functionalEvaluation: {
+      rangeOfMotionStatus: 'completo',
+      rangeOfMotionDetails: 'Flexión 140°, extensión 0°. Rango articular óseo libre sin bloqueos intraarticulares.',
+      mobilityQuality: 'compensatoria',
+      painOnMovement: {
+        movementPhase: 'rango_medio',
+        painNature: 'punzante',
+        dynamicPainEVA: 6,
+        triggeringMovement: 'Fricción en flexión de 30° al bajar escaleras o en apoyo unipodal con impacto'
+      },
+      functionalJointTests: [
+        { testName: 'Test de Noble', joint: 'Rodilla / Cintilla Iliotibial', result: 'positivo', notes: 'Dolor reproducible en cóndilo lateral a 30°' },
+        { testName: 'Test de Ober', joint: 'Cadera / Tensor Fascia Lata', result: 'positivo', notes: 'Falta de caída pasiva de la pierna por contractura del TFL' },
+        { testName: 'Test de Lachman', joint: 'Rodilla / LCA', result: 'negativo', notes: 'Ligamentos cruzados indemnes y estables' }
+      ],
+      palpationPainZone: {
+        triggerPoints: ['Vientre muscular del tensor de la fascia lata', 'Porción media del tracto iliotibial'],
+        muscleTone: 'hipertonia_espasmo',
+        temperatureEdema: 'calor_inflamatorio',
+        tenderZoneNotes: 'Hipersensibilidad al tacto profundo en cóndilo femoral lateral con dolor agudo.'
+      }
+    },
+    exerciseDosage: {
+      customCardTitle: 'Protocolo de Descarga de Cintilla Iliotibial & Fortalecimiento de Glúteo Medio',
+      customCardFrequency: '4 días por semana',
+      customExercises: [
+        { id: 'ex-301', name: 'Clamshell (Ostra) con Miniband en Rodillas', series: 4, repsOrTime: '15 reps por lado', restSeconds: 45, techniqueTips: 'Pies juntos, no rotar la cadera hacia atrás', targetZone: 'Glúteo Medio y Rotadores Externos' },
+        { id: 'ex-302', name: 'Monster Walk Lateral con Banda Elástica', series: 3, repsOrTime: '12 pasos por dirección', restSeconds: 60, techniqueTips: 'Mantener rodillas alineadas con el segundo dedo del pie', targetZone: 'Abductores de Cadera' },
+        { id: 'ex-303', name: 'Paso Lateral en Step Bajo con Control de Valgo', series: 3, repsOrTime: '10 reps lentas (3s bajada)', restSeconds: 60, techniqueTips: 'Evitar que la rodilla colapse hacia adentro', targetZone: 'Control Motor Vasto Interno y Glúteo' },
+        { id: 'ex-304', name: 'Auto-Liberación con Foam Roller en Glúteo Mayor', series: 3, repsOrTime: '60 segundos continuos', restSeconds: 30, techniqueTips: 'Respiración diafragmática pausada sobre puntos sensibles', targetZone: 'Cadena Lateral de Cadera' }
+      ],
+      progressiveLoads: {
+        phase: 'movilidad_sin_carga',
+        maxRecommendedKg: 0,
+        progressionCriteria: 'Reiniciar trote progresivo sólo cuando el test de sentadilla a una pierna no presente valgo ni dolor.'
+      },
+      exerciseAdaptation: {
+        allowedExercises: ['Natación estilo crol o patada suave', 'Bicicleta elíptica suave sin impacto', 'Prensa unilateral con carga liviana', 'Ejercicios completos de tren superior en máquina y mancuernas'],
+        prohibitedExercises: ['Trote en cinta o pavimento', 'Clases de spinning con resistencia elevada y pedaleo de pie', 'Pliometría o saltos al cajón'],
+        adaptationNotes: 'Sustituir todo trabajo cardiovascular de impacto por elíptica o natación.'
+      },
+      passiveMobility: {
+        techniques: ['Estiramiento en aducción de cadera en bipedestación con apoyo en pared'],
+        notes: 'Sostener 35 segundos sin rebotar al finalizar la sesión.'
+      },
+      resistance: {
+        intensity: 'baja',
+        details: 'Series con resistencia de miniband elástica enfocadas en activación y control motor.'
+      },
+      proprioception: {
+        exercises: ['Apoyo monopodal con espejo frontal para autocorrección del valgo'],
+        level: 'intermedio'
+      },
+      vestibular: {
+        enabled: false
+      },
+      power: {
+        status: 'contraindicado',
+        details: 'Impactos prohibidos.'
+      }
+    },
+    studentReportSentAt: '2026-08-28 05:15 PM',
+    studentReportDeliveryMethod: 'whatsapp'
   }
 ];
 

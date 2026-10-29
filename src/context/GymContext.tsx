@@ -25,11 +25,13 @@ import {
   UserRole,
   SpinningAccessCode,
   AttendanceRecord,
-  StaffContract,
   PhysiotherapySessionRecord,
+  EvaluationTemplate,
   AppointmentBooking,
-  StaffPayrollEntry
+  StaffPayrollEntry,
+  StaffContract
 } from '../types/gym';
+import { INITIAL_PHYSIO_TEMPLATES } from '../data/physioTemplates';
 import { 
   INITIAL_MEMBERS, 
   INITIAL_PLANS, 
@@ -78,6 +80,7 @@ interface GymContextType {
   attendances: AttendanceRecord[];
   staffContracts: StaffContract[];
   physioRecords: PhysiotherapySessionRecord[];
+  physioTemplates: EvaluationTemplate[];
   appointments: AppointmentBooking[];
   payrollEntries: StaffPayrollEntry[];
   
@@ -183,7 +186,8 @@ interface GymContextType {
     issuedByTrainerName: string;
     notes?: string;
   }) => SpinningAccessCode;
-  redeemSpinningAccessCode: (codeStr: string, bikeNumber: number, overrideStudentName?: string, overrideStudentPhone?: string) => { success: boolean; message: string; reservation?: SpinningReservation };
+  redeemSpinningAccessCode: (codeStr: string, bikeNumber: number, overrideStudentName?: string, overrideStudentPhone?: string, overrideSessionId?: string) => { success: boolean; message: string; reservation?: SpinningReservation };
+  resetDemoSpinningCodes: () => void;
 
   // Attendance actions
   recordAttendance: (data: Omit<AttendanceRecord, 'id' | 'date' | 'time'>) => { success: boolean; record: AttendanceRecord; message: string };
@@ -200,6 +204,8 @@ interface GymContextType {
   updatePhysioRecord: (id: string, recordData: Partial<PhysiotherapySessionRecord>) => void;
   deletePhysioRecord: (id: string) => void;
   getPhysioRecordsByMemberId: (memberId: string) => PhysiotherapySessionRecord[];
+  addPhysioTemplate: (templateData: Omit<EvaluationTemplate, 'id'>) => EvaluationTemplate;
+  deletePhysioTemplate: (id: string) => void;
 
   // Appointment actions
   addAppointment: (appointmentData: Omit<AppointmentBooking, 'id'>) => void;
@@ -262,6 +268,7 @@ const STORAGE_KEYS = {
   ATTENDANCES: 'gymcontrol_attendances_v1',
   STAFF_CONTRACTS: 'gymcontrol_staff_contracts_v1',
   PHYSIO_RECORDS: 'gymcontrol_physio_records_v1',
+  PHYSIO_TEMPLATES: 'gymcontrol_physio_templates_v1',
   APPOINTMENTS: 'gymcontrol_appointments_v1',
   PAYROLL_ENTRIES: 'gymcontrol_payroll_entries_v1'
 };
@@ -294,10 +301,16 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [spinningReservations, setSpinningReservations] = useState<SpinningReservation[]>(() => loadStorage(STORAGE_KEYS.SPINNING_RESERVATIONS, INITIAL_SPINNING_RESERVATIONS));
   const [users, setUsers] = useState<AppUser[]>(() => loadStorage(STORAGE_KEYS.USERS, INITIAL_USERS));
   const [currentUser, setCurrentUser] = useState<AppUser>(() => loadStorage(STORAGE_KEYS.CURRENT_USER, INITIAL_USERS[0]));
-  const [spinningAccessCodes, setSpinningAccessCodes] = useState<SpinningAccessCode[]>(() => loadStorage(STORAGE_KEYS.SPINNING_ACCESS_CODES, INITIAL_SPINNING_ACCESS_CODES));
+  const [spinningAccessCodes, setSpinningAccessCodes] = useState<SpinningAccessCode[]>(() => {
+    const stored = loadStorage(STORAGE_KEYS.SPINNING_ACCESS_CODES, INITIAL_SPINNING_ACCESS_CODES);
+    const storedCodes = new Set(stored.map((c: any) => c.code.toUpperCase()));
+    const missing = INITIAL_SPINNING_ACCESS_CODES.filter(c => !storedCodes.has(c.code.toUpperCase()));
+    return missing.length > 0 ? [...stored, ...missing] : stored;
+  });
   const [attendances, setAttendances] = useState<AttendanceRecord[]>(() => loadStorage(STORAGE_KEYS.ATTENDANCES, INITIAL_ATTENDANCES));
   const [staffContracts, setStaffContracts] = useState<StaffContract[]>(() => loadStorage(STORAGE_KEYS.STAFF_CONTRACTS, INITIAL_STAFF_CONTRACTS));
   const [physioRecords, setPhysioRecords] = useState<PhysiotherapySessionRecord[]>(() => loadStorage(STORAGE_KEYS.PHYSIO_RECORDS, INITIAL_PHYSIO_RECORDS));
+  const [physioTemplates, setPhysioTemplates] = useState<EvaluationTemplate[]>(() => loadStorage(STORAGE_KEYS.PHYSIO_TEMPLATES, INITIAL_PHYSIO_TEMPLATES));
   const [appointments, setAppointments] = useState<AppointmentBooking[]>(() => loadStorage(STORAGE_KEYS.APPOINTMENTS, INITIAL_APPOINTMENTS));
   const [payrollEntries, setPayrollEntries] = useState<StaffPayrollEntry[]>(() => loadStorage(STORAGE_KEYS.PAYROLL_ENTRIES, INITIAL_PAYROLL_ENTRIES));
 
@@ -385,6 +398,10 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.PHYSIO_RECORDS, JSON.stringify(physioRecords));
   }, [physioRecords]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.PHYSIO_TEMPLATES, JSON.stringify(physioTemplates));
+  }, [physioTemplates]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.APPOINTMENTS, JSON.stringify(appointments));
@@ -1376,6 +1393,20 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return physioRecords.filter(r => r.memberId === memberId).sort((a, b) => b.sessionNumber - a.sessionNumber);
   };
 
+  const addPhysioTemplate = (templateData: Omit<EvaluationTemplate, 'id'>): EvaluationTemplate => {
+    const newTemplate: EvaluationTemplate = {
+      ...templateData,
+      id: `tpl-${Date.now()}`,
+      isCustom: true
+    };
+    setPhysioTemplates(prev => [newTemplate, ...prev]);
+    return newTemplate;
+  };
+
+  const deletePhysioTemplate = (id: string) => {
+    setPhysioTemplates(prev => prev.filter(t => t.id !== id));
+  };
+
   // --- APPOINTMENT ACTIONS (NUTRICIÓN & FISIOTERAPIA) ---
   const addAppointment = (appointmentData: Omit<AppointmentBooking, 'id'>) => {
     const newAppointment: AppointmentBooking = {
@@ -1562,6 +1593,7 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       attendances,
       staffContracts,
       physioRecords,
+      physioTemplates,
       appointments,
       payrollEntries,
       addStaffContract,
@@ -1572,6 +1604,8 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       updatePhysioRecord,
       deletePhysioRecord,
       getPhysioRecordsByMemberId,
+      addPhysioTemplate,
+      deletePhysioTemplate,
       addAppointment,
       updateAppointmentStatus,
       deleteAppointment,

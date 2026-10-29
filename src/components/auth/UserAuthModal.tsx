@@ -96,11 +96,12 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
             <span>Alumno / Socio</span>
           </span>
         );
+      case 'reception':
       case 'staff':
         return (
           <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-100 text-amber-700 border border-amber-200 flex items-center space-x-1">
             <Users className="w-3 h-3" />
-            <span>Personal Recepción</span>
+            <span>Recepción</span>
           </span>
         );
     }

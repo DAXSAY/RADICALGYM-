@@ -387,6 +387,58 @@ export const NutritionModule: React.FC = () => {
     });
   };
 
+  // Add Blank/Custom Food Row for text + weight typing
+  const handleAddBlankFoodRow = (mealIndex: number) => {
+    setFormMeals(prev => {
+      const copy = [...prev];
+      const targetMeal = { ...copy[mealIndex] };
+      const newItem: MealItem = {
+        id: `item-${Date.now()}-${Math.random()}`,
+        name: '',
+        portion: '150g',
+        weightGrams: 150,
+        calories: 180,
+        proteins: 18,
+        carbs: 20,
+        fats: 3
+      };
+      targetMeal.items = [...targetMeal.items, newItem];
+      targetMeal.totalCalories += newItem.calories;
+      targetMeal.totalProteins += newItem.proteins;
+      targetMeal.totalCarbs += newItem.carbs;
+      targetMeal.totalFats += newItem.fats;
+      copy[mealIndex] = targetMeal;
+      return copy;
+    });
+  };
+
+  // Update specific field of a food item in a meal
+  const handleUpdateFoodItem = (mealIndex: number, itemId: string, field: 'name' | 'portion' | 'calories' | 'weightGrams', value: any) => {
+    setFormMeals(prev => {
+      const copy = [...prev];
+      const targetMeal = { ...copy[mealIndex] };
+      targetMeal.items = targetMeal.items.map(it => {
+        if (it.id === itemId) {
+          const updated = { ...it, [field]: value };
+          if (field === 'portion') {
+            const numeric = parseInt(String(value).replace(/[^0-9]/g, ''), 10);
+            if (!isNaN(numeric)) updated.weightGrams = numeric;
+          }
+          return updated;
+        }
+        return it;
+      });
+
+      // Recalculate totals
+      targetMeal.totalCalories = targetMeal.items.reduce((s, it) => s + (Number(it.calories) || 0), 0);
+      targetMeal.totalProteins = targetMeal.items.reduce((s, it) => s + (Number(it.proteins) || 0), 0);
+      targetMeal.totalCarbs = targetMeal.items.reduce((s, it) => s + (Number(it.carbs) || 0), 0);
+      targetMeal.totalFats = targetMeal.items.reduce((s, it) => s + (Number(it.fats) || 0), 0);
+      copy[mealIndex] = targetMeal;
+      return copy;
+    });
+  };
+
   // Print Plan
   const handlePrintPlan = () => {
     window.print();
@@ -1192,42 +1244,101 @@ export const NutritionModule: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Items table */}
-                      <div className="space-y-1.5 bg-white p-2.5 rounded-lg border border-slate-200">
+                      {/* Items table: Textual Food Input + Adjacent Weight Box */}
+                      <div className="space-y-2 bg-white p-3 rounded-xl border border-slate-200">
+                        <div className="hidden sm:grid sm:grid-cols-12 gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">
+                          <span className="col-span-6">Alimento / Qué comer (Escribir texto)</span>
+                          <span className="col-span-3">Peso / Porción (g)</span>
+                          <span className="col-span-2">Calorías</span>
+                          <span className="col-span-1 text-right">Quitar</span>
+                        </div>
+
                         {meal.items.map((it) => (
-                          <div key={it.id} className="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
-                            <div>
-                              <span className="font-semibold text-slate-800">{it.name}</span>
-                              <span className="text-[11px] text-slate-500 ml-2">({it.portion})</span>
+                          <div key={it.id} className="grid grid-cols-1 sm:grid-cols-12 gap-1.5 items-center p-2 rounded-lg bg-slate-50/80 border border-slate-200">
+                            {/* Food Text Field */}
+                            <div className="sm:col-span-6">
+                              <input
+                                type="text"
+                                placeholder="Escribe el alimento (ej. Pechuga a la plancha, Avena)..."
+                                value={it.name}
+                                onChange={(e) => handleUpdateFoodItem(mIdx, it.id, 'name', e.target.value)}
+                                className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 font-semibold focus:outline-none focus:border-emerald-600"
+                              />
                             </div>
-                            <div className="flex items-center space-x-3">
-                              <span className="font-bold text-slate-700">{it.calories} kcal</span>
+
+                            {/* Adjacent Weight Box */}
+                            <div className="sm:col-span-3">
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  placeholder="ej. 150g / 200g"
+                                  value={it.portion}
+                                  onChange={(e) => handleUpdateFoodItem(mIdx, it.id, 'portion', e.target.value)}
+                                  className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-800 font-bold focus:outline-none focus:border-emerald-600 text-center"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Calories Box */}
+                            <div className="sm:col-span-2">
+                              <div className="flex items-center">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  placeholder="Kcal"
+                                  value={it.calories}
+                                  onChange={(e) => handleUpdateFoodItem(mIdx, it.id, 'calories', Number(e.target.value))}
+                                  className="w-full px-2 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-amber-700 font-black focus:outline-none focus:border-emerald-600 text-center"
+                                />
+                                <span className="text-[10px] text-slate-400 ml-1 hidden sm:inline">kcal</span>
+                              </div>
+                            </div>
+
+                            {/* Delete Button */}
+                            <div className="sm:col-span-1 text-right">
                               <button
                                 type="button"
                                 onClick={() => handleRemoveItemFromMeal(mIdx, it.id)}
-                                className="text-red-500 hover:text-red-700 p-0.5 cursor-pointer"
+                                className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-50 cursor-pointer transition-colors"
+                                title="Eliminar fila de alimento"
                               >
-                                <X className="w-3.5 h-3.5" />
+                                <X className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
                         ))}
+
+                        {/* Add Row Button */}
+                        <div className="pt-1 flex items-center justify-between flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleAddBlankFoodRow(mIdx)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>+ Digitar nuevo alimento y peso</span>
+                          </button>
+
+                          <span className="text-[11px] text-slate-400">
+                            Total tiempo: <strong className="text-slate-700">{meal.totalCalories} kcal</strong>
+                          </span>
+                        </div>
                       </div>
 
                       {/* Quick Add Common Food */}
-                      <div className="pt-1">
+                      <div className="pt-0.5">
                         <span className="text-[10px] font-bold text-slate-400 block mb-1">
-                          + Agregar Alimento Rápido:
+                          + O sugerir presets rápidos de alimentos con porción:
                         </span>
                         <div className="flex flex-wrap gap-1">
-                          {COMMON_FOODS.slice(0, 6).map((food, fIdx) => (
+                          {COMMON_FOODS.slice(0, 7).map((food, fIdx) => (
                             <button
                               key={fIdx}
                               type="button"
                               onClick={() => handleAddItemToMeal(mIdx, food)}
                               className="px-2 py-0.5 rounded-md bg-slate-200/80 hover:bg-slate-300 text-[10px] font-medium text-slate-700 transition-colors cursor-pointer"
                             >
-                              + {food.name.split(' ')[0]} ({food.calories} kcal)
+                              + {food.name.split(' ')[0]} ({food.portion} · {food.calories} kcal)
                             </button>
                           ))}
                         </div>

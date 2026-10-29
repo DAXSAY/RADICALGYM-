@@ -10,14 +10,18 @@ import {
   Bell, 
   Plus, 
   Search, 
-  Calendar,
-  AlertTriangle,
-  RefreshCw,
-  Download,
-  Flame,
-  CheckCircle2,
-  XCircle,
-  Clock
+  Calendar, 
+  AlertTriangle, 
+  RefreshCw, 
+  Download, 
+  Flame, 
+  CheckCircle2, 
+  XCircle, 
+  Clock,
+  Bike,
+  Activity,
+  ShieldCheck,
+  ChevronDown
 } from 'lucide-react';
 import { useGym } from '../../context/GymContext';
 import confetti from 'canvas-confetti';
@@ -37,7 +41,12 @@ export type NavTab =
   | 'trainers'
   | 'routines'
   | 'measurements'
-  | 'spinning';
+  | 'spinning'
+  | 'student_portal'
+  | 'mi_membresia'
+  | 'mis_citas'
+  | 'spinning_cine'
+  | 'mis_medidas';
 
 interface HeaderProps {
   activeTab: NavTab;
@@ -56,7 +65,17 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNewExpenseModal,
   onOpenUserAuthModal
 }) => {
-  const { renewalAlerts, lowStockProducts, members, exportDataJSON, resetToDefaults, currentUser, recordAttendance } = useGym();
+  const { 
+    renewalAlerts, 
+    lowStockProducts, 
+    members, 
+    exportDataJSON, 
+    resetToDefaults, 
+    currentUser, 
+    setCurrentUser,
+    users,
+    recordAttendance 
+  } = useGym();
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchCheckIn, setSearchCheckIn] = useState('');
   const [checkInResult, setCheckInResult] = useState<{
@@ -159,82 +178,141 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Quick Check-in bar (Receptionist fast entry) */}
-        <div className="w-full md:w-80 lg:w-96 relative">
-          <form onSubmit={handleQuickCheckIn} className="relative">
-            <input
-              type="text"
-              placeholder="Check-in rápido (DNI o Nombre)..."
-              value={searchCheckIn}
-              onChange={(e) => setSearchCheckIn(e.target.value)}
-              className="w-full pl-8 pr-20 py-1.5 bg-gray-50 border border-gray-300 rounded-md text-xs text-slate-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-colors"
-            />
-            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5" />
-            <button
-              type="submit"
-              className="absolute right-1 top-1 bottom-1 px-2.5 bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-medium rounded transition-colors cursor-pointer"
-            >
-              Validar
-            </button>
-          </form>
+        {/* Middle Section: Staff Check-in bar OR Student Quick Navigator */}
+        {currentUser.role !== 'student' ? (
+          <div className="w-full md:w-80 lg:w-96 relative">
+            <form onSubmit={handleQuickCheckIn} className="relative">
+              <input
+                type="text"
+                placeholder="Check-in rápido (DNI o Nombre)..."
+                value={searchCheckIn}
+                onChange={(e) => setSearchCheckIn(e.target.value)}
+                className="w-full pl-8 pr-20 py-1.5 bg-gray-50 border border-gray-300 rounded-md text-xs text-slate-900 placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-colors"
+              />
+              <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5" />
+              <button
+                type="submit"
+                className="absolute right-1 top-1 bottom-1 px-2.5 bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-medium rounded transition-colors cursor-pointer"
+              >
+                Validar
+              </button>
+            </form>
 
-          {/* Quick Check-in Result Popover */}
-          {checkInResult && (
-            <div className="absolute left-0 mt-2 w-80 lg:w-96 bg-white border border-gray-200 rounded-xl shadow-xl p-3 z-50 animate-in fade-in slide-in-from-top-2 text-slate-800">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                  {checkInResult.status === 'active' ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  ) : checkInResult.status === 'expiring_soon' ? (
-                    <Clock className="w-5 h-5 text-amber-500 shrink-0" />
-                  ) : (
-                    <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                  )}
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">
-                      {checkInResult.member ? checkInResult.member.fullName : 'Resultado de búsqueda'}
-                    </h4>
-                    <p className="text-[11px] text-slate-600 mt-0.5">{checkInResult.message}</p>
+            {/* Quick Check-in Result Popover */}
+            {checkInResult && (
+              <div className="absolute left-0 mt-2 w-80 lg:w-96 bg-white border border-gray-200 rounded-xl shadow-xl p-3 z-50 animate-in fade-in slide-in-from-top-2 text-slate-800">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    {checkInResult.status === 'active' ? (
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                    ) : checkInResult.status === 'expiring_soon' ? (
+                      <Clock className="w-5 h-5 text-amber-500 shrink-0" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                    )}
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900">
+                        {checkInResult.member ? checkInResult.member.fullName : 'Resultado de búsqueda'}
+                      </h4>
+                      <p className="text-[11px] text-slate-600 mt-0.5">{checkInResult.message}</p>
+                    </div>
                   </div>
+                  <button 
+                    onClick={() => setCheckInResult(null)}
+                    className="text-gray-400 hover:text-gray-700 text-xs px-1 cursor-pointer"
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button 
-                  onClick={() => setCheckInResult(null)}
-                  className="text-gray-400 hover:text-gray-700 text-xs px-1 cursor-pointer"
-                >
-                  ✕
-                </button>
+                {checkInResult.member && (
+                  <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-slate-500">
+                    <span>DNI: <strong className="text-slate-800">{checkInResult.member.dni}</strong></span>
+                    <span className="font-semibold text-blue-600">{checkInResult.member.planName}</span>
+                  </div>
+                )}
               </div>
-              {checkInResult.member && (
-                <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-slate-500">
-                  <span>DNI: <strong className="text-slate-800">{checkInResult.member.dni}</strong></span>
-                  <span className="font-semibold text-blue-600">{checkInResult.member.planName}</span>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 overflow-x-auto py-1">
+            <button
+              onClick={() => setActiveTab('spinning_cine')}
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-2xs"
+            >
+              <Bike className="w-3.5 h-3.5 text-blue-600" />
+              <span>Reservar Spinning (Cine)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('mis_medidas')}
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-2xs"
+            >
+              <Activity className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Mis Medidas</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('mi_membresia')}
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shadow-2xs"
+            >
+              <CreditCard className="w-3.5 h-3.5 text-slate-600" />
+              <span>Mi Membresía</span>
+            </button>
+          </div>
+        )}
 
-        {/* Action buttons, Avatars & Alerts */}
+        {/* Action buttons, Avatars & Role Switcher */}
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           
-          {/* Asistencias Quick Button */}
-          <button
-            onClick={() => setActiveTab('attendances')}
-            className={`p-2 rounded-md transition-colors cursor-pointer border ${
-              activeTab === 'attendances' 
-                ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs' 
-                : 'bg-gray-100 hover:bg-gray-200 text-slate-700 border-gray-200'
-            }`}
-            title="Control de Asistencias (Alumnos & Personal)"
-          >
-            <UserCheck className="w-4 h-4" />
-          </button>
+          {/* Asistencias Quick Button (Staff only) */}
+          {currentUser.role !== 'student' && (
+            <button
+              onClick={() => setActiveTab('attendances')}
+              className={`p-2 rounded-md transition-colors cursor-pointer border ${
+                activeTab === 'attendances' 
+                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-slate-700 border-gray-200'
+              }`}
+              title="Control de Asistencias (Alumnos & Personal)"
+            >
+              <UserCheck className="w-4 h-4" />
+            </button>
+          )}
 
-          {/* Current User Session Switcher */}
+          {/* 1-CLICK FAST ROLE SELECTOR */}
+          <div className="flex items-center bg-gray-100 p-0.5 rounded-lg border border-gray-300">
+            <select
+              value={currentUser.role}
+              onChange={(e) => {
+                const targetRole = e.target.value;
+                const targetUser = users.find(u => u.role === targetRole) || users[0];
+                if (targetUser) {
+                  setCurrentUser(targetUser);
+                  if (targetRole === 'student') {
+                    setActiveTab('mi_membresia');
+                  } else if (targetRole === 'trainer') {
+                    setActiveTab('routines');
+                  } else if (targetRole === 'reception' || targetRole === 'staff') {
+                    setActiveTab('attendances');
+                  } else {
+                    setActiveTab('dashboard');
+                  }
+                  confetti({ particleCount: 30, spread: 60, origin: { y: 0.1 } });
+                }
+              }}
+              className="bg-transparent text-xs font-black text-slate-800 px-2 py-1 rounded focus:outline-none cursor-pointer"
+              title="Cambiar rol del sistema instantáneamente"
+            >
+              <option value="admin">👑 Admin</option>
+              <option value="trainer">🏋️‍♂️ Coach</option>
+              <option value="reception">📋 Recepción</option>
+              <option value="student">👤 Alumno</option>
+            </select>
+          </div>
+
+          {/* Current User Session Switcher Modal Trigger */}
           <div 
             onClick={onOpenUserAuthModal}
             className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer"
-            title="Haz clic para cambiar de usuario o iniciar sesión"
+            title="Haz clic para ver usuarios o gestionar sesiones"
           >
             <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">
               {currentUser.photoUrl ? (
@@ -253,32 +331,38 @@ export const Header: React.FC<HeaderProps> = ({
                     ? 'bg-purple-100 text-purple-700' 
                     : currentUser.role === 'trainer' 
                     ? 'bg-blue-100 text-blue-700' 
+                    : currentUser.role === 'reception' || currentUser.role === 'staff'
+                    ? 'bg-amber-100 text-amber-700'
                     : 'bg-emerald-100 text-emerald-700'
                 }`}>
-                  {currentUser.role === 'student' ? 'Alumno' : currentUser.role === 'trainer' ? 'Coach' : 'Admin'}
+                  {currentUser.role === 'student' ? 'Alumno' : currentUser.role === 'trainer' ? 'Coach' : currentUser.role === 'admin' ? 'Admin' : 'Recepción'}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Fast Sale */}
-          <button
-            onClick={onOpenQuickSaleModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer"
-            title="Venta rápida en tienda / POS"
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Venta POS</span>
-          </button>
+          {/* Fast Sale (Only for staff / admin / reception) */}
+          {currentUser.role !== 'student' && (
+            <button
+              onClick={onOpenQuickSaleModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              title="Venta rápida en tienda / POS"
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Venta POS</span>
+            </button>
+          )}
 
-          {/* New Member */}
-          <button
-            onClick={onOpenNewMemberModal}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Nuevo Registro</span>
-          </button>
+          {/* New Member (Only for staff / admin / reception) */}
+          {currentUser.role !== 'student' && (
+            <button
+              onClick={onOpenNewMemberModal}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-xs transition-all cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Nuevo Registro</span>
+            </button>
+          )}
 
           {/* Notifications Center button */}
           <div className="relative">
